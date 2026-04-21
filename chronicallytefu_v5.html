@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Courier+Prime&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0e1a;
+    min-height: 100vh;
+    font-family: 'Share Tech Mono', monospace;
+    color: #c8d8f0;
+    padding: 20px;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(30,50,100,0.03) 2px, rgba(30,50,100,0.03) 4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .desktop { max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .taskbar {
+    background: linear-gradient(to right, #1a2a5e, #0d1a3a);
+    border: 1px solid #2a3f7a;
+    border-bottom: 2px solid #3a5499;
+    padding: 4px 8px;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
+    font-family: 'VT323', monospace; font-size: 16px;
+  }
+
+  .start-btn {
+    background: linear-gradient(180deg, #2a4a9e, #1a2e6a);
+    border: 1px solid #4a6abb;
+    border-bottom-color: #0a1430; border-right-color: #0a1430;
+    padding: 2px 10px;
+    font-family: 'VT323', monospace; font-size: 16px;
+    color: #e8f0ff; cursor: default; letter-spacing: 1px;
+  }
+
+  .taskbar-time { margin-left: auto; color: #8aa8d8; font-size: 14px; }
+
+  .window {
+    background: #111828;
+    border: 1px solid #1e3060; border-top: 2px solid #2a4a9e;
+    margin-bottom: 10px;
+    box-shadow: 2px 2px 0 #060b15, -1px -1px 0 #1a2a5e;
+  }
+
+  .window-titlebar {
+    background: linear-gradient(90deg, #1a3070 0%, #0d1a3a 40%, #0a1228 100%);
+    padding: 4px 6px; display: flex; align-items: center; gap: 6px;
+    border-bottom: 1px solid #1e3060;
+  }
+
+  .window-title { font-family: 'VT323', monospace; font-size: 15px; color: #a0c0f0; flex: 1; }
+  .window-btns { display: flex; gap: 2px; }
+  .wbtn {
+    width: 14px; height: 14px;
+    background: linear-gradient(180deg, #1e3a7a, #0d1e4a);
+    border: 1px solid #3a5a9a; border-bottom-color: #06101e; border-right-color: #06101e;
+    font-size: 9px; color: #7090c0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: default; font-family: 'VT323', monospace;
+  }
+
+  .window-body { padding: 16px; }
+
+  .profile-area { display: flex; align-items: flex-start; gap: 16px; }
+
+  .avatar-frame {
+    border: 2px solid #2a4a9e;
+    border-bottom-color: #06101e; border-right-color: #06101e;
+    padding: 3px; background: #0d1a3a; flex-shrink: 0;
+  }
+
+  .avatar-inner {
+    width: 90px; height: 90px;
+    overflow: hidden;
+    border: 1px solid #1e3060;
+    position: relative;
+  }
+
+  .avatar-inner img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    filter: contrast(1.05) brightness(0.95);
+  }
+
+  .avatar-inner::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(10,20,40,0.12) 3px, rgba(10,20,40,0.12) 4px);
+    pointer-events: none;
+  }
+
+  .profile-info { flex: 1; }
+
+  .username { font-family: 'VT323', monospace; font-size: 24px; color: #6a9ee0; letter-spacing: 1px; margin-bottom: 4px; }
+  .handle { font-size: 11px; color: #3a5a8a; margin-bottom: 10px; }
+
+  .bio-text {
+    font-size: 12px; color: #9abcdc; line-height: 1.8;
+    font-family: 'Courier Prime', monospace;
+    border-left: 2px solid #1e3a7a; padding-left: 8px;
+    margin-bottom: 12px; font-style: italic;
+  }
+
+  .ig-btn {
+    display: inline-block;
+    background: linear-gradient(180deg, #1a3270, #0d1c48);
+    border: 1px solid #3a5a9a; border-bottom-color: #06101e; border-right-color: #06101e;
+    padding: 4px 14px;
+    font-family: 'VT323', monospace; font-size: 15px;
+    color: #90b8e8; cursor: pointer; text-decoration: none; letter-spacing: 0.5px;
+  }
+
+  .ig-btn:hover { filter: brightness(1.3); }
+
+  .status-bar {
+    background: #0d1428; border: 1px solid #1a2e5a; border-top: none;
+    padding: 3px 8px; font-size: 11px; color: #3a5a8a; display: flex; gap: 12px;
+  }
+  .status-bar span::before { content: '▪ '; }
+
+  .counter-row { display: flex; gap: 8px; margin-top: 10px; }
+  .counter-box { flex: 1; background: #0a1020; border: 1px solid #1a2a5a; padding: 6px 8px; text-align: center; }
+  .counter-num { font-family: 'VT323', monospace; font-size: 20px; color: #4a7acc; display: block; }
+  .counter-lbl { font-size: 10px; color: #2e4a7a; letter-spacing: 1px; }
+
+  .pixel-deco { display: flex; gap: 3px; margin-bottom: 8px; }
+  .pixel-deco span { display: block; width: 6px; height: 6px; }
+
+  .blinking-cursor {
+    display: inline-block; width: 8px; height: 14px;
+    background: #4a7acc; vertical-align: text-bottom;
+    animation: blink 1s step-end infinite; margin-left: 2px;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  .links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .link-item {
+    background: #0d1428; border: 1px solid #1a2e5a; border-bottom-color: #06101e; border-right-color: #06101e;
+    padding: 8px 10px; font-size: 12px; color: #6a90c0; cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    display: flex; align-items: center; gap: 6px; transition: background 0.1s;
+  }
+  .link-item:hover { background: #121e40; color: #90b8e8; }
+  .link-dot { width: 6px; height: 6px; background: #2a4a8a; border: 1px solid #4a7acc; flex-shrink: 0; }
+
+  .tooltip-box {
+    background: #0a0e1a; border: 1px solid #1a2e5a;
+    padding: 6px 10px; font-size: 11px; color: #5a80b0; margin-top: 10px;
+    font-family: 'Share Tech Mono', monospace; display: flex; align-items: center; gap: 6px;
+  }
+  .tooltip-box::before { content: 'ℹ'; color: #2a4a8a; font-size: 13px; }
+
+  .section-label { font-family: 'VT323', monospace; font-size: 13px; color: #2e4a7a; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .gallery-item {
+    background: #0a1020;
+    border: 1px solid #1a2e5a;
+    border-bottom-color: #06101e;
+    border-right-color: #06101e;
+    overflow: hidden;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+
+  .gallery-item:hover { filter: brightness(1.15); }
+
+  .gallery-img-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
+    background: #0d1428;
+  }
+
+  .gallery-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: contrast(1.05) brightness(0.9);
+    display: block;
+  }
+
+  .gallery-img-wrap::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(10,20,40,0.1) 3px, rgba(10,20,40,0.1) 4px);
+    pointer-events: none;
+  }
+
+  .gallery-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: #1e3060; font-family: 'VT323', monospace; font-size: 28px;
+    gap: 4px;
+  }
+
+  .gallery-placeholder span { font-size: 11px; letter-spacing: 1px; color: #1a2e5a; }
+
+  .gallery-caption {
+    padding: 6px 8px;
+    font-size: 11px;
+    color: #5a80b0;
+    font-family: 'Courier Prime', monospace;
+    font-style: italic;
+    border-top: 1px solid #121e38;
+    min-height: 32px;
+  }
+
+  .gallery-caption-label {
+    font-family: 'VT323', monospace;
+    font-size: 11px;
+    color: #2a4a7a;
+    letter-spacing: 1px;
+    margin-bottom: 1px;
+    font-style: normal;
+  }
+
+  .music-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .artist-row {
+    display: flex; align-items: center; gap: 10px;
+    background: #0a1020;
+    border: 1px solid #1a2e5a;
+    border-bottom-color: #06101e; border-right-color: #06101e;
+    padding: 8px 10px;
+    text-decoration: none;
+    transition: background 0.1s;
+  }
+
+  .artist-row:hover { background: #121e40; }
+
+  .artist-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #0d1e48, #1a3070);
+    border: 1px solid #2a4a8a;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+    font-family: 'VT323', monospace; color: #4a7acc;
+  }
+
+  .artist-info { flex: 1; min-width: 0; }
+
+  .artist-name {
+    font-family: 'VT323', monospace; font-size: 16px;
+    color: #90b8e8; letter-spacing: 0.5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .artist-tag {
+    font-size: 10px; color: #2e4a7a;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  .spotify-badge {
+    font-family: 'VT323', monospace; font-size: 12px;
+    color: #1e4a2a; background: #0a1e10;
+    border: 1px solid #1a3a22; padding: 2px 6px;
+    white-space: nowrap; flex-shrink: 0;
+    letter-spacing: 1px;
+  }
+
+  .artist-row:hover .spotify-badge { color: #3a8a4a; border-color: #2a5a32; }
+
+  .music-note-bar {
+    display: flex; gap: 3px; margin-bottom: 8px; align-items: center;
+  }
+  .music-note-bar span {
+    font-family: 'VT323', monospace; font-size: 18px; color: #1a3a7a;
+    animation: pulse-note 2s ease-in-out infinite;
+  }
+  .music-note-bar span:nth-child(2) { animation-delay: 0.3s; }
+  .music-note-bar span:nth-child(3) { animation-delay: 0.6s; }
+  @keyframes pulse-note { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="desktop">
+
+  <div class="taskbar">
+    <div class="start-btn">&#x2665; Start</div>
+    <div style="font-size:13px; color:#4a6aaa;">chronicallytefu.html</div>
+    <div class="taskbar-time" id="clock">00:00</div>
+  </div>
+
+  <div class="window">
+    <div class="window-titlebar">
+      <div class="window-title">&#128100; Mi Perfil — Chronically Tefu</div>
+      <div class="window-btns">
+        <div class="wbtn">_</div>
+        <div class="wbtn">&#9633;</div>
+        <div class="wbtn" style="color:#c04040;">&#x2715;</div>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="pixel-deco">
+        <span style="background:#0d1e48;"></span>
+        <span style="background:#1a3070;"></span>
+        <span style="background:#2a4a9e;"></span>
+        <span style="background:#1a3070;"></span>
+        <span style="background:#0d1e48;"></span>
+      </div>
+
+      <div class="profile-area">
+        <div class="avatar-frame">
+          <div class="avatar-inner">
+            <img src="bbad35de-8fef-4fa0-9a60-626f2ca874b2.jfif" alt="Chronically Tefu" />
+          </div>
+        </div>
+        <div class="profile-info">
+          <div class="username">Tefu<span class="blinking-cursor"></span></div>
+          <div class="handle">@chronicallytefu · instagram.com</div>
+          <div class="bio-text">
+            "No tengo nada que perder,<br>que arda el mundo."
+          </div>
+          <a class="ig-btn" href="https://instagram.com/chronicallytefu" target="_blank">
+            &#128247; Ver Instagram &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="counter-row">
+        <div class="counter-box">
+          <span class="counter-num">25 mg</span>
+          <span class="counter-lbl">Quetiapina</span>
+        </div>
+        <div class="counter-box">
+          <span class="counter-num">150 mg</span>
+          <span class="counter-lbl">Sertralina</span>
+        </div>
+        <div class="counter-box">
+          <span class="counter-num">1 mg</span>
+          <span class="counter-lbl">Clonazepam</span>
+        </div>
+      </div>
+    </div>
+    <div class="status-bar">
+      <span>Lamotrigina</span>
+      <span>Risperidona</span>
+    </div>
+  </div>
+
+  <div class="window">
+    <div class="window-titlebar">
+      <div class="window-title">&#128279; Links &amp; Contacto</div>
+      <div class="window-btns">
+        <div class="wbtn">_</div>
+        <div class="wbtn">&#9633;</div>
+        <div class="wbtn" style="color:#c04040;">&#x2715;</div>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="section-label">// Encontrame en</div>
+      <div class="links-grid">
+        <div class="link-item" onclick="openLink('https://instagram.com/chronicallytefu')">
+          <div class="link-dot"></div>Instagram
+        </div>
+        <div class="link-item"><div class="link-dot"></div>TikTok</div>
+        <div class="link-item"><div class="link-dot"></div>Twitter / X</div>
+        <div class="link-item"><div class="link-dot"></div>Contacto</div>
+      </div>
+      <div class="tooltip-box">Página personal de Tefu · hecha a mano</div>
+    </div>
+    <div class="status-bar">
+      <span>4 links</span>
+      <span>Todos los derechos reservados</span>
+    </div>
+  </div>
+
+  <div class="window">
+    <div class="window-titlebar">
+      <div class="window-title">&#128444; Galería — mis fotos</div>
+      <div class="window-btns">
+        <div class="wbtn">_</div>
+        <div class="wbtn">&#9633;</div>
+        <div class="wbtn" style="color:#c04040;">&#x2715;</div>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="section-label">// fotos y momentos</div>
+      <div class="gallery-grid">
+
+        <div class="gallery-item">
+          <div class="gallery-img-wrap">
+            <div class="gallery-placeholder">&#128247;<span>foto 01</span></div>
+          </div>
+          <div class="gallery-caption">
+            <div class="gallery-caption-label">// desc.</div>
+            agregar descripción acá
+          </div>
+        </div>
+
+        <div class="gallery-item">
+          <div class="gallery-img-wrap">
+            <div class="gallery-placeholder">&#128247;<span>foto 02</span></div>
+          </div>
+          <div class="gallery-caption">
+            <div class="gallery-caption-label">// desc.</div>
+            agregar descripción acá
+          </div>
+        </div>
+
+        <div class="gallery-item">
+          <div class="gallery-img-wrap">
+            <div class="gallery-placeholder">&#128247;<span>foto 03</span></div>
+          </div>
+          <div class="gallery-caption">
+            <div class="gallery-caption-label">// desc.</div>
+            agregar descripción acá
+          </div>
+        </div>
+
+        <div class="gallery-item">
+          <div class="gallery-img-wrap">
+            <div class="gallery-placeholder">&#128247;<span>foto 04</span></div>
+          </div>
+          <div class="gallery-caption">
+            <div class="gallery-caption-label">// desc.</div>
+            agregar descripción acá
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="status-bar">
+      <span>4 fotos</span>
+      <span>reemplazá los placeholders con tus imágenes</span>
+    </div>
+  </div>
+
+  <div class="window">
+    <div class="window-titlebar">
+      <div class="window-title">&#9835; Mis gustos musicales</div>
+      <div class="window-btns">
+        <div class="wbtn">_</div>
+        <div class="wbtn">&#9633;</div>
+        <div class="wbtn" style="color:#c04040;">&#x2715;</div>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="music-note-bar">
+        <span>&#9834;</span><span>&#9835;</span><span>&#9834;</span>
+        <div style="font-size:11px; color:#2e4a7a; font-family:'Share Tech Mono',monospace; margin-left:6px; letter-spacing:1px;">// lo que escucho</div>
+      </div>
+      <div class="music-list">
+
+        <a class="artist-row" href="https://open.spotify.com/artist/REEMPLAZA_CON_ID" target="_blank">
+          <div class="artist-icon">01</div>
+          <div class="artist-info">
+            <div class="artist-name">Nombre del artista</div>
+            <div class="artist-tag">género · descripción</div>
+          </div>
+          <div class="spotify-badge">&#9654; spotify</div>
+        </a>
+
+        <a class="artist-row" href="https://open.spotify.com/artist/REEMPLAZA_CON_ID" target="_blank">
+          <div class="artist-icon">02</div>
+          <div class="artist-info">
+            <div class="artist-name">Nombre del artista</div>
+            <div class="artist-tag">género · descripción</div>
+          </div>
+          <div class="spotify-badge">&#9654; spotify</div>
+        </a>
+
+        <a class="artist-row" href="https://open.spotify.com/artist/REEMPLAZA_CON_ID" target="_blank">
+          <div class="artist-icon">03</div>
+          <div class="artist-info">
+            <div class="artist-name">Nombre del artista</div>
+            <div class="artist-tag">género · descripción</div>
+          </div>
+          <div class="spotify-badge">&#9654; spotify</div>
+        </a>
+
+        <a class="artist-row" href="https://open.spotify.com/artist/REEMPLAZA_CON_ID" target="_blank">
+          <div class="artist-icon">04</div>
+          <div class="artist-info">
+            <div class="artist-name">Nombre del artista</div>
+            <div class="artist-tag">género · descripción</div>
+          </div>
+          <div class="spotify-badge">&#9654; spotify</div>
+        </a>
+
+        <a class="artist-row" href="https://open.spotify.com/artist/REEMPLAZA_CON_ID" target="_blank">
+          <div class="artist-icon">05</div>
+          <div class="artist-info">
+            <div class="artist-name">Nombre del artista</div>
+            <div class="artist-tag">género · descripción</div>
+          </div>
+          <div class="spotify-badge">&#9654; spotify</div>
+        </a>
+
+      </div>
+    </div>
+    <div class="status-bar">
+      <span>5 artistas</span>
+      <span>click para abrir en spotify</span>
+    </div>
+  </div>
+
+</div>
+<script>
+  function pad(n){ return n < 10 ? '0'+n : n; }
+  function tick(){
+    var d = new Date();
+    document.getElementById('clock').textContent = pad(d.getHours())+':'+pad(d.getMinutes());
+  }
+  tick(); setInterval(tick, 10000);
+</script>
+</body>
+</html>
