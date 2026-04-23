@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=Courier+Prime&display=swap');
 
@@ -395,6 +399,111 @@
   height: 100%;
   background: linear-gradient(90deg, #2a4a9e, #6a9ee0);
 }
+
+@media (max-width: 700px) {
+  body {
+    padding: 10px;
+  }
+
+  .desktop {
+    max-width: 100%;
+  }
+
+  .taskbar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .taskbar-time {
+    margin-left: 0;
+    width: 100%;
+    text-align: right;
+  }
+
+  .window-body {
+    padding: 12px;
+  }
+
+  .profile-area {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .avatar-frame {
+    margin-bottom: 8px;
+  }
+
+  .profile-info {
+    width: 100%;
+  }
+
+  .mini-popup {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .counter-row {
+    flex-direction: column;
+  }
+
+  .links-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .game-card {
+    flex-direction: column;
+  }
+
+  .game-cover {
+    width: 100%;
+  }
+
+  .game-title {
+    font-size: 22px;
+  }
+
+  .game-stats {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .artist-row {
+    align-items: flex-start;
+  }
+
+  .artist-name {
+    white-space: normal;
+  }
+
+  .status-bar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .username {
+    font-size: 22px;
+  }
+
+  .bio-text {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .ig-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
   @keyframes pulse-note { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 </style>
 </head>
