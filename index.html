@@ -318,6 +318,83 @@
   font-family: 'Courier Prime', monospace;
 }
 
+.game-card {
+  display: flex;
+  gap: 14px;
+  background: #0a1020;
+  border: 1px solid #1a2e5a;
+  border-bottom-color: #06101e;
+  border-right-color: #06101e;
+  padding: 12px;
+  align-items: flex-start;
+}
+
+.game-cover {
+  width: 180px;
+  flex-shrink: 0;
+  border: 1px solid #1a2e5a;
+  background: #0d1428;
+  overflow: hidden;
+}
+
+.game-cover img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.game-info {
+  flex: 1;
+}
+
+.game-title {
+  font-family: 'VT323', monospace;
+  font-size: 28px;
+  color: #c8d8f0;
+  margin-bottom: 16px;
+}
+
+.game-stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.game-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.game-num {
+  font-family: 'VT323', monospace;
+  font-size: 34px;
+  color: #6a9ee0;
+}
+
+.game-lbl {
+  font-size: 11px;
+  color: #4a6a9a;
+  letter-spacing: 1px;
+}
+
+.game-progress-label {
+  font-size: 11px;
+  color: #8aa8d8;
+  margin-bottom: 6px;
+}
+
+.game-progress {
+  width: 100%;
+  height: 12px;
+  background: #08101d;
+  border: 1px solid #1a2e5a;
+  overflow: hidden;
+}
+
+.game-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2a4a9e, #6a9ee0);
+}
   @keyframes pulse-note { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 </style>
 </head>
@@ -591,6 +668,49 @@
   <div class="status-bar">
     <span>2 dibujos</span>
     <span>hecho por Tefu</span>
+  </div>
+</div>
+<div class="window">
+  <div class="window-titlebar">
+    <div class="window-title">&#127918; Juegos favoritos</div>
+    <div class="window-btns">
+      <div class="wbtn">_</div>
+      <div class="wbtn">&#9633;</div>
+      <div class="wbtn" style="color:#c04040;">&#x2715;</div>
+    </div>
+  </div>
+  <div class="window-body">
+    <div class="section-label">// horas perdidas</div>
+
+    <div class="game-card">
+      <div class="game-cover">
+        <img src="dmc-cover.jpg" alt="Devil May Cry HD Collection">
+      </div>
+
+      <div class="game-info">
+        <div class="game-title">Devil May Cry HD Collection</div>
+
+        <div class="game-stats">
+          <div class="game-stat">
+            <span class="game-num">117</span>
+            <span class="game-lbl">Horas jugadas</span>
+          </div>
+          <div class="game-stat">
+            <span class="game-num">15</span>
+            <span class="game-lbl">Logros</span>
+          </div>
+        </div>
+
+        <div class="game-progress-label">Avance en logros: 15 de 99</div>
+        <div class="game-progress">
+          <div class="game-progress-fill" style="width: 15%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <span>steam vibes</span>
+    <span>juego favorito actual</span>
   </div>
 </div>
 <script>
